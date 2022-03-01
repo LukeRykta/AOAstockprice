@@ -3,6 +3,6 @@
 public class Main {
     public static void main(String [] args) {
 
-        System.out.println("shut ur ass up brandone");
+        System.out.println("shut ur ass up Luke!");
     }
 }
