@@ -16,7 +16,7 @@ public class Main {
         //lists to contain strings from
         List<String> bitcoinStr, gamestopStr, smallInputStr;
 
-        System.out.println("\n----- PARSING TEXT FILES -----\n");
+        System.out.println("\nPARSING TEXT FILES...\n");
         System.out.println("FILE 1:");
         bitcoinStr = OpenFile.parseTxt(inputs[0]);
         System.out.println("FILE 2:");
@@ -26,21 +26,27 @@ public class Main {
 
         int i;
 
+        System.out.println("CONVERTING TO DOUBLE ARRAYS...\n");
         bitcoin = toDouble.convert(bitcoinStr.size(), bitcoinStr);
         gamestop = toDouble.convert(gamestopStr.size(), gamestopStr);
         smallInput = toDouble.convert(smallInputStr.size(), smallInputStr);
 
+        System.out.println("DOUBLE ARRAY 1:");
         for (i = 0; i < bitcoinStr.size(); i++) {
             System.out.print(bitcoin[i] + " ");
         }
 
-        System.out.println("");
+
+        System.out.println("\n");
+        System.out.println("DOUBLE ARRAY 2:");
         for (i = 0; i < gamestopStr.size(); i++) {
             System.out.print(gamestop[i] + " ");
         }
-        System.out.println("");
+        System.out.println("\n");
+        System.out.println("DOUBLE ARRAY 3:");
         for (i = 0; i < smallInputStr.size(); i++) {
             System.out.print(smallInput[i] + " ");
         }
+        System.out.println("");
     }
 }
