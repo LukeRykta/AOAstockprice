@@ -20,7 +20,7 @@ public class OpenFile {
         reader.close();
 
         System.out.println(form);
-        System.out.println("----- FINISHED READING FILE -----");
+        System.out.println("----- FINISHED READING FILE -----\n");
 
         return form;
     }

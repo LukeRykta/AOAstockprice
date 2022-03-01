@@ -17,8 +17,11 @@ public class Main {
         List<String> bitcoinStr, gamestopStr, smallInputStr;
 
         System.out.println("\n----- PARSING TEXT FILES -----\n");
+        System.out.println("FILE 1:");
         bitcoinStr = OpenFile.parseTxt(inputs[0]);
+        System.out.println("FILE 2:");
         gamestopStr = OpenFile.parseTxt(inputs[1]);
+        System.out.println("FILE 3:");
         smallInputStr = OpenFile.parseTxt(inputs[2]);
 
         int i;
