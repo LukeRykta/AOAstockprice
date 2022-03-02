@@ -6,7 +6,7 @@ public class Main {
 
     public static double getMin(double[] t, int index, int len){
         double profit = 0;
-        double temp = t[index] - t[index + 1];
+        double temp = 0;
 
         // Uses Math.profit to find the lowest value between current index and next index
         if(index >= len - 2){
@@ -21,6 +21,7 @@ public class Main {
             else
                 profit = temp;
         }
+        System.out.print("Profit after for loop: " + profit + "\n");
         // This is the logic we'll need to find the profit number
         // iterates by one through the given array
         profit = getMin(t, index + 1, len);
