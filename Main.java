@@ -1,8 +1,29 @@
 import java.io.*;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
+
+    public static double[] parseTxt(String arg) throws IOException {
+        Scanner inFile = new Scanner(new File (String.format("inputs/%s", arg)));
+        List<Double> forms = new ArrayList<>();
+
+        while (inFile.hasNext()){
+            forms.add(inFile.nextDouble());
+        }
+
+        inFile.close();
+
+        //wizardry
+        double[] form = forms.stream().mapToDouble(Double::doubleValue).toArray();
+        System.out.println("READ SUCCESS: " + form[0]);
+
+        return form;
+    }
 
     public static double getMin(double[] list, int index){
         double min;
@@ -48,15 +69,8 @@ public class Main {
         }
 
         //slice and dice the array into 2 halves per call
-        leftHalf = Arrays.copyOfRange(list, 0, (list.length) / 2 );
+        leftHalf = Arrays.copyOfRange(list, 0, (list.length) / 2);
         rightHalf = Arrays.copyOfRange(list, (list.length) / 2 , list.length);
-        //System.out.println("list:" + Arrays.toString(list) + "\n" + "lefthalf:"+ Arrays.toString(leftHalf) + "\n" + "righthalf:" + Arrays.toString(rightHalf));
-
-        //checks right half to see if profit
-        if (rightHalf[0] - leftHalf[0] > profit){
-            profit = rightHalf[0] - leftHalf[0];
-            //System.out.println("CHECK1 REACHED, PROFIT = " + profit);
-        }
 
         //gets min and max for each half of split array
         low = getMin(leftHalf, index);
@@ -65,61 +79,32 @@ public class Main {
         //checks profit across the mid-point
         if (high - low > profit){
             profit = high-low;
-            //System.out.println("CHECK2 REACHED, PROFIT = " + profit);
+        }
+
+        //gets min and max for RIGHT side of array
+        low = getMin(rightHalf, index);
+        high = getMax(rightHalf, index);
+
+        //checks right side of array to find profit
+        if (high - low > profit) {
+            profit = high-low;
+        }
+
+        //checks right half to see if profit
+        if (rightHalf[0] - leftHalf[0] > profit){
+            profit = rightHalf[0] - leftHalf[0];
         }
 
         return profit;
     }
 
     public static void main(String [] args) throws IOException {
-        double bit, gam, lar, nas, rea, sma;
-        double profit=0, optimal=0;
-        double[] bitcoin, gamestop, largeInput, nasdaq, reallyLargeInput, smallInput;
+        NumberFormat formatter = new DecimalFormat("0.00");
+        double profit=0, optimal;
+        double[] fileValues;
 
-        //names of text files to parse data from
-        String[] inputs = {"bitcoin.txt", "gamestop.txt", "largeInput.txt", "nasdaq.txt", "reallyLargeInput.txt", "smallInput.txt"};
-        //lists to contain strings from
-        List<String> bitcoinStr, gamestopStr, largeInputStr, nasdaqStr, reallyLargeInputStr, smallInputStr;
-
-        //realized after implementing that i could have just parsed the doubles directly from the txt files..
-        System.out.println("\nPARSING TEXT FILES...\n");
-        System.out.println("FILE 1:");
-        bitcoinStr = OpenFile.parseTxt(inputs[0]);
-        System.out.println("FILE 2:");
-        gamestopStr = OpenFile.parseTxt(inputs[1]);
-        System.out.println("FILE 3:");
-        largeInputStr = OpenFile.parseTxt(inputs[2]);
-        System.out.println("FILE 4:");
-        nasdaqStr = OpenFile.parseTxt(inputs[3]);
-
-        //System.out.println("FILE 5:");
-        //IMPORTANT: CREATES STACK OVERFLOW DUE TO getMin() METHOD
-        //reallyLargeInputStr = OpenFile.parseTxt(inputs[4]);
-
-        System.out.println("FILE 6:");
-        smallInputStr = OpenFile.parseTxt(inputs[5]);
-
-        System.out.println("CONVERTING TO DOUBLE ARRAYS...\n");
-        bitcoin = toDouble.convert(bitcoinStr.size(), bitcoinStr);
-        gamestop = toDouble.convert(gamestopStr.size(), gamestopStr);
-        largeInput = toDouble.convert(largeInputStr.size(), largeInputStr);
-        nasdaq = toDouble.convert(nasdaqStr.size(), nasdaqStr);
-        //reallyLargeInput = toDouble.convert(reallyLargeInputStr.size(), reallyLargeInputStr);
-        smallInput = toDouble.convert(smallInputStr.size(), smallInputStr);
-
-        System.out.println("GETTING OPTIMAL PROFIT...\n");
-        bit = getOptimal(bitcoin, 0, profit);
-        gam = getOptimal(gamestop, 0, profit);
-        lar = getOptimal(largeInput, 0, profit);
-        nas = getOptimal(nasdaq, 0, profit);
-        //rea = getOptimal(reallyLargeInput, 0, profit, optimal);
-        sma = getOptimal(smallInput, 0, profit);
-
-        System.out.println("The optimal profit for bitcoin.txt is " + bit);
-        System.out.println("The optimal profit for gamestop.txt is " + gam);
-        System.out.println("The optimal profit for largeInput.txt is " + lar);
-        System.out.println("The optimal profit for nasdaq.txt is " + nas);
-        //System.out.println("The optimal profit for reallyLargeInput.txt is " + rea);
-        System.out.println("The optimal profit for smallInput.txt is " + sma);
+        fileValues = parseTxt(args[0]);
+        optimal = getOptimal(fileValues, 0, profit);
+        System.out.println("The optimal profit for " + args[0] + " is " + formatter.format(optimal));
     }
 }
