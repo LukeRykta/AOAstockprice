@@ -18,9 +18,13 @@ public class Main {
 
         inFile.close();
 
-        //wizardry
-        double[] form = forms.stream().mapToDouble(Double::doubleValue).toArray();
-        System.out.println("READ SUCCESS: " + form[0]);
+        double[] form = new double[forms.size()];
+        for (int i = 0; i < form.length; i++){
+            form[i] = forms.get(i);
+        }
+
+        //wizardry that we cant use because the FOX servers the school uses are pre JAVA8... therefore, for-loop above
+        //double[] form = forms.stream().mapToDouble(Double::doubleValue).toArray();
 
         return form;
     }
@@ -68,7 +72,7 @@ public class Main {
             return 0;
         }
 
-        //slice and dice the array into 2 halves per call
+        //slice and dice the array into 2 halves
         leftHalf = Arrays.copyOfRange(list, 0, (list.length) / 2);
         rightHalf = Arrays.copyOfRange(list, (list.length) / 2 , list.length);
 
@@ -81,6 +85,7 @@ public class Main {
             profit = high-low;
         }
 
+        rightHalf = Arrays.copyOfRange(rightHalf, (rightHalf.length) / 2 , rightHalf.length);
         //gets min and max for RIGHT side of array
         low = getMin(rightHalf, index);
         high = getMax(rightHalf, index);
@@ -103,8 +108,10 @@ public class Main {
         double profit=0, optimal;
         double[] fileValues;
 
-        fileValues = parseTxt(args[0]);
-        optimal = getOptimal(fileValues, 0, profit);
-        System.out.println("The optimal profit for " + args[0] + " is " + formatter.format(optimal));
+        for (String arg : args) {
+            fileValues = parseTxt(arg);
+            optimal = getOptimal(fileValues, 0, profit);
+            System.out.println("The optimal profit for " + arg + " is " + formatter.format(optimal));
+        }
     }
 }
