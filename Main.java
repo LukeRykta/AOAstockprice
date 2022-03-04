@@ -39,7 +39,7 @@ public class Main {
         return Math.max(list[index], max);
     }
 
-    public static double getOptimal(double[] list, int index, double profit, double optimal){
+    public static double getOptimal(double[] list, int index, double profit){
         double low, high;
         double[] leftHalf, rightHalf;
 
@@ -99,7 +99,6 @@ public class Main {
         System.out.println("FILE 6:");
         smallInputStr = OpenFile.parseTxt(inputs[5]);
 
-
         System.out.println("CONVERTING TO DOUBLE ARRAYS...\n");
         bitcoin = toDouble.convert(bitcoinStr.size(), bitcoinStr);
         gamestop = toDouble.convert(gamestopStr.size(), gamestopStr);
@@ -109,12 +108,12 @@ public class Main {
         smallInput = toDouble.convert(smallInputStr.size(), smallInputStr);
 
         System.out.println("GETTING OPTIMAL PROFIT...\n");
-        bit = getOptimal(bitcoin, 0, profit, optimal);
-        gam = getOptimal(gamestop, 0, profit, optimal);
-        lar = getOptimal(largeInput, 0, profit, optimal);
-        nas = getOptimal(nasdaq, 0, profit, optimal);
+        bit = getOptimal(bitcoin, 0, profit);
+        gam = getOptimal(gamestop, 0, profit);
+        lar = getOptimal(largeInput, 0, profit);
+        nas = getOptimal(nasdaq, 0, profit);
         //rea = getOptimal(reallyLargeInput, 0, profit, optimal);
-        sma = getOptimal(smallInput, 0, profit, optimal);
+        sma = getOptimal(smallInput, 0, profit);
 
         System.out.println("The optimal profit for bitcoin.txt is " + bit);
         System.out.println("The optimal profit for gamestop.txt is " + gam);
