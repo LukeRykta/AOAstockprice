@@ -74,9 +74,6 @@ public class Main {
 
         //gets min and max for each half of split array
         low = getMin(leftHalf, index);
-        //Checks min number for each file. GAMESTOP DOES NOT RETURN RIGHT MIN.
-        System.out.println("\nMin numbers for each text file: " + low);
-
         high = getMax(rightHalf, index);
 
         //checks profit across the mid-point
