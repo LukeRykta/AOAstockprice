@@ -93,7 +93,7 @@ public class Main {
             profit = high-low;
         }
 
-        //checks right half to see if profit
+        //checks left half to see if profit
         if (rightHalf[0] - leftHalf[0] > profit){
             profit = rightHalf[0] - leftHalf[0];
         }
