@@ -19,8 +19,8 @@ public class OpenFile {
 
         reader.close();
 
-        System.out.println(form);
-        System.out.println("----- FINISHED READING FILE -----\n");
+        //System.out.println(form);
+        System.out.println("----- FILE READ SUCCESSFULLY -----\n");
 
         return form;
     }
