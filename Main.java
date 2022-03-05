@@ -53,22 +53,22 @@ public class Main {
     public static Tracker combine(double[] list, Tracker left, Tracker right) {
         // check left side profit
         double leftProfit = list[left.sellDay] - list[left.buyDay];
-        int maxSellDay = left.sellDay;
-        int maxBuyDay = left.buyDay;
+        int bestSellDay = left.sellDay;
+        int bestBuyDay = left.buyDay;
 
         // check right side profit
         double rightProfit = list[right.sellDay] - list[right.buyDay];
         if (rightProfit > leftProfit) {
             leftProfit = rightProfit;
-            maxSellDay = right.sellDay;
-            maxBuyDay = right.buyDay;
+            bestSellDay = right.sellDay;
+            bestBuyDay = right.buyDay;
         }
 
         // check cross-section profit
         double crossProfit = list[right.maxTime] - list[left.minTime];
         if (crossProfit > leftProfit) {
-            maxSellDay = right.maxTime;
-            maxBuyDay = left.minTime;
+            bestSellDay = right.maxTime;
+            bestBuyDay = left.minTime;
         }
 
         // update min
@@ -87,7 +87,7 @@ public class Main {
             newMaxTime = right.maxTime;
         }
 
-        return new Tracker(maxSellDay, maxBuyDay, newMinTime, newMaxTime);
+        return new Tracker(bestSellDay, bestBuyDay, newMinTime, newMaxTime);
     }
 
     public static double[] parseTxt(String arg) throws IOException {
