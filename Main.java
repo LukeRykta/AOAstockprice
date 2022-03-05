@@ -2,11 +2,93 @@ import java.io.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+
+    private static class Tracker {
+        int sellDay;
+        int buyDay;
+        int minTime;
+        int maxTime;
+
+        Tracker(int sell, int buy, int min, int max) {
+            sellDay = sell;
+            buyDay = buy;
+            minTime = min;
+            maxTime = max;
+        }
+    }
+
+    public static double getOptimal(double[] list) {
+        //if list has <= 1 value in it there is not a solution at that point
+        if (list.length <= 1) {
+            return 0;
+        }
+
+        Tracker values;
+        values = getOptimalHelper(list, 0, list.length - 1);
+
+        return list[values.sellDay] - list[values.buyDay];
+    }
+
+    public static Tracker getOptimalHelper(double[] list, int low, int high) {
+        //base case
+        if (low >= high) {
+            return new Tracker(low, low, low, low);
+        }
+        int midpoint = low + (high - low) / 2;
+
+        //use midpoint as upper range
+        Tracker left = getOptimalHelper(list, low, midpoint);
+
+        //update "low" to midpoint plus 1 here to start from 2nd quadrant of list
+        Tracker right = getOptimalHelper(list, midpoint + 1, high);
+
+        //pass objects to combine to evaluate greatest vals
+        return combine(list, left, right);
+    }
+
+    public static Tracker combine(double[] list, Tracker left, Tracker right) {
+        // check left side profit
+        double leftProfit = list[left.sellDay] - list[left.buyDay];
+        int maxSellDay = left.sellDay;
+        int maxBuyDay = left.buyDay;
+
+        // check right side profit
+        double rightProfit = list[right.sellDay] - list[right.buyDay];
+        if (rightProfit > leftProfit) {
+            leftProfit = rightProfit;
+            maxSellDay = right.sellDay;
+            maxBuyDay = right.buyDay;
+        }
+
+        // check cross-section profit
+        double crossProfit = list[right.maxTime] - list[left.minTime];
+        if (crossProfit > leftProfit) {
+            maxSellDay = right.maxTime;
+            maxBuyDay = left.minTime;
+        }
+
+        // update min
+        int newMinTime;
+        if (list[left.minTime] < list[right.minTime]){
+            newMinTime = left.minTime;
+        }else{
+            newMinTime = right.minTime;
+        }
+
+        // update max
+        int newMaxTime;
+        if (list[left.maxTime] > list[right.maxTime]){
+            newMaxTime = left.maxTime;
+        }else{
+            newMaxTime = right.maxTime;
+        }
+
+        return new Tracker(maxSellDay, maxBuyDay, newMinTime, newMaxTime);
+    }
 
     public static double[] parseTxt(String arg) throws IOException {
         Scanner inFile = new Scanner(new File (String.format("inputs/%s", arg)));
@@ -32,6 +114,7 @@ public class Main {
     public static double getMin(double[] list, int index){
         double min;
 
+        //System.out.println("min accessed");
         //MARIO SAYS: the remaining list index should be returned
         if (list.length <= 1){
             return list[0];
@@ -50,6 +133,7 @@ public class Main {
     public static double getMax(double[] list, int index){
         double max;
 
+        //System.out.println("max accessed");
         //LUIGI SAYS: IF THE LIST SHORT, THEN JUST ABORT
         if (list.length <= 1){
             return list[0];
@@ -64,53 +148,19 @@ public class Main {
         return Math.max(list[index], max);
     }
 
-    public static double getOptimal(double[] list, int index, double profit){
-        double low, high;
-        double[] leftHalf, rightHalf;
-
-        if (list.length <= 1){
-            return 0;
-        }
-
-        //slice and dice the array into 2 halves
-        leftHalf = Arrays.copyOfRange(list, 0, (list.length) / 2);
-        rightHalf = Arrays.copyOfRange(list, (list.length) / 2 , list.length);
-
-        //gets min and max for each half of split array
-        low = getMin(leftHalf, index);
-        high = getMax(rightHalf, index);
-
-        //checks profit across the mid-point
-        if (high - low > profit){
-            profit = high-low;
-        }
-
-        rightHalf = Arrays.copyOfRange(rightHalf, (rightHalf.length) / 2 , rightHalf.length);
-        //gets min and max for RIGHT side of array
-        low = getMin(rightHalf, index);
-        high = getMax(rightHalf, index);
-
-        //checks right side of array to find profit
-        if (high - low > profit) {
-            profit = high-low;
-        }
-
-        //checks left half to see if profit
-        if (rightHalf[0] - leftHalf[0] > profit){
-            profit = rightHalf[0] - leftHalf[0];
-        }
-
-        return profit;
-    }
-
     public static void main(String [] args) throws IOException {
         NumberFormat formatter = new DecimalFormat("0.00");
-        double profit=0, optimal;
+        //int sellDay;
+        //int buyDay;
+        //int minTime;
+        //int maxTime;
+        double optimal;
         double[] fileValues;
 
         for (String arg : args) {
             fileValues = parseTxt(arg);
-            optimal = getOptimal(fileValues, 0, profit);
+            optimal = getOptimal(fileValues);
+            //optimal = getOptimal(fileValues, 0, profit);
             System.out.println("The optimal profit for " + arg + " is " + formatter.format(optimal));
         }
     }
